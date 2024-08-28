@@ -2,10 +2,10 @@ package com.backend.clinica.entity;
 
 public class Odontologo {
     private Long id;
-
     private String matricula;
     private String nombre;
     private String apellido;
+
 
     public Odontologo(Long id, String matricula, String nombre, String apellido) {
         this.id = id;
@@ -28,11 +28,11 @@ public class Odontologo {
         this.id = id;
     }
 
-    public String getMatricula() {
+    public String getNumero_matricula() {
         return matricula;
     }
 
-    public void setMatricula(String matricula) {
+    public void setNumero_matricula(String matricula) {
         this.matricula = matricula;
     }
 
@@ -50,5 +50,10 @@ public class Odontologo {
 
     public void setApellido(String apellido) {
         this.apellido = apellido;
+    }
+
+    @Override
+    public String toString() {
+        return "\nId: " + id + " - Numero de matrícula: " + matricula + " - Nombre: " + nombre + " - apellido: " + apellido;
     }
 }
