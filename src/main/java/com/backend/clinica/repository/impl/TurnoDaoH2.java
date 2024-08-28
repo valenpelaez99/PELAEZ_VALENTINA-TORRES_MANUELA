@@ -4,9 +4,11 @@ import com.backend.clinica.entity.Turno;
 import com.backend.clinica.repository.IDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class TurnoDaoH2 implements IDao <Turno> {
 
     private final Logger LOGGER = LoggerFactory.getLogger(TurnoDaoH2.class);
