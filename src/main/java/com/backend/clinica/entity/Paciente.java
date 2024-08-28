@@ -18,7 +18,7 @@ public class Paciente {
         this.domicilio = domicilio;
     }
 
-    public Paciente(Long id, String nombre, String apellido, int dni, LocalDate fechaIngreso, Domicilio domicilio) {
+    public Paciente(Long id) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;

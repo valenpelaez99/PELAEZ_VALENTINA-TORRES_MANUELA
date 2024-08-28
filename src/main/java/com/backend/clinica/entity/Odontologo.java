@@ -28,11 +28,11 @@ public class Odontologo {
         this.id = id;
     }
 
-    public String getNumero_matricula() {
+    public String getMatricula() {
         return matricula;
     }
 
-    public void setNumero_matricula(String matricula) {
+    public void setMatricula(String matricula) {
         this.matricula = matricula;
     }
 

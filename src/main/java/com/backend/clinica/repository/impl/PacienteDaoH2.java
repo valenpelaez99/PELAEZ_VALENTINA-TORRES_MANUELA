@@ -121,7 +121,7 @@ public class PacienteDaoH2 implements IDao<Paciente> {
 
         Domicilio domicilio = new DomicilioDaoH2().buscarPorId(resultSet.getLong("domicilio_id"));
 
-        return new Paciente(resultSet.getLong("id"), resultSet.getString("nombre"), resultSet.getString("apellido"), resultSet.getInt("dni"), resultSet.getDate("fecha").toLocalDate(), domicilio);
+        return new Paciente(resultSet.getLong("id"));
 
     }
 
