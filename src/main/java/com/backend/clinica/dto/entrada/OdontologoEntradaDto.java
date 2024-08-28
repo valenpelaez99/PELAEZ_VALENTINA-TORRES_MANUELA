@@ -1,31 +1,29 @@
-package com.backend.clinica.entity;
+package com.backend.clinica.dto.entrada;
 
-public class Odontologo {
-    private Long id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
+public class OdontologoEntradaDto {
+
+    @NotBlank(message = "Debe especificarse el numero de matricula")
+    @Size(min = 1, max = 10, message = "La matricula debe tener entre 1 y 10 caracteres")
     private String matricula;
+
+    @NotBlank(message = "Debe especificarse el nombre")
     private String nombre;
+
+    @NotBlank(message = "Debe especificarse el apellido")
     private String apellido;
 
+    public OdontologoEntradaDto() {
 
-    public Odontologo(Long id, String matricula, String nombre, String apellido) {
-        this.id = id;
+    }
+
+    public OdontologoEntradaDto(String matricula, String nombre, String apellido) {
+
         this.matricula = matricula;
         this.nombre = nombre;
         this.apellido = apellido;
-    }
-
-    public Odontologo(String matricula, String nombre, String apellido) {
-        this.matricula = matricula;
-        this.nombre = nombre;
-        this.apellido = apellido;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getMatricula() {
@@ -51,6 +49,4 @@ public class Odontologo {
     public void setApellido(String apellido) {
         this.apellido = apellido;
     }
-
-
 }
