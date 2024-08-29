@@ -1,13 +1,26 @@
 package com.backend.clinica.entity;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name= "PACIENTES")
 public class Paciente {
+
+    @Id
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
+
+    @Column(length = 30, nullable = false)
     private String nombre;
+
+    @Column(length = 30, nullable = false)
     private String apellido;
+
+    @Column(length = 30, nullable = false)
     private int dni;
     private LocalDate fechaIngreso;
+
     private Domicilio domicilio;
 
     public Paciente(String nombre, String apellido, int dni, LocalDate fechaIngreso, Domicilio domicilio) {

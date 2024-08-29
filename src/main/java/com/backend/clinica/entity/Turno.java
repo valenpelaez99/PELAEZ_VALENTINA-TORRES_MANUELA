@@ -1,9 +1,13 @@
 package com.backend.clinica.entity;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name= "TURNOS")
 public class Turno {
-
+    @Id
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
     private Paciente paciente;
     private Odontologo odontologo;

@@ -1,13 +1,10 @@
 package com.backend.clinica.service.impl;
 
 import com.backend.clinica.dto.entrada.OdontologoEntradaDto;
-import com.backend.clinica.dto.entrada.PacienteEntradaDto;
 import com.backend.clinica.dto.salida.OdontologoSalidaDto;
-import com.backend.clinica.dto.salida.PacienteSalidaDto;
 import com.backend.clinica.entity.Odontologo;
-import com.backend.clinica.entity.Paciente;
+import com.backend.clinica.repository.OdontologoRepository;
 import com.backend.clinica.service.IOdontologoService;
-import com.backend.clinica.repository.IDao;
 import com.backend.clinica.utils.JsonPrinter;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -19,12 +16,11 @@ import java.util.List;
 public class OdontologoService implements IOdontologoService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(OdontologoService.class);
-    private final IDao<Odontologo> odontologoIDao;
+    private final OdontologoRepository odontologoRepository;
     private final ModelMapper modelMapper;
 
-    public OdontologoService(IDao<Odontologo> odontologoIDao, ModelMapper modelMapper) {
-
-        this.odontologoIDao = odontologoIDao;
+    public OdontologoService(OdontologoRepository odontologoRepository, ModelMapper modelMapper) {
+        this.odontologoRepository = odontologoRepository;
         this.modelMapper = modelMapper;
 
     }
@@ -34,7 +30,7 @@ public class OdontologoService implements IOdontologoService {
         Odontologo entidadOdontologo = modelMapper.map(odontologoEntradaDto, Odontologo.class);
 
         LOGGER.info("EntidadOdontologo: {}", JsonPrinter.toString(entidadOdontologo));
-        Odontologo odontologoRegistrado = odontologoIDao.registrar(entidadOdontologo);
+        Odontologo odontologoRegistrado = odontologoRepository.save(entidadOdontologo);
 
         LOGGER.info("OdontologoRegistrado: {}", JsonPrinter.toString(odontologoRegistrado));
         OdontologoSalidaDto odontologoSalidaDto = modelMapper.map(odontologoRegistrado, OdontologoSalidaDto.class);
@@ -51,7 +47,7 @@ public class OdontologoService implements IOdontologoService {
 
     @Override
     public List<OdontologoSalidaDto> listarOdontologos() {
-        List<OdontologoSalidaDto> odontologoSalidaDto = odontologoIDao.listarTodos()
+        List<OdontologoSalidaDto> odontologoSalidaDto = odontologoRepository.findAll()
                 .stream()
                 .map(odontologo -> modelMapper.map(odontologo, OdontologoSalidaDto.class))
                 .toList();
@@ -68,7 +64,7 @@ public class OdontologoService implements IOdontologoService {
     @Override
     public void eliminarOdontologo(Long id) {
         if(buscarOdontologoPorId(id) != null){
-            //llamada a la capa repositorio para eliminar
+            odontologoRepository.deleteById(id);
             LOGGER.warn("Se ha eliminado el odontologo con id {}", id);
         } else {
             //excepcion resource not found
