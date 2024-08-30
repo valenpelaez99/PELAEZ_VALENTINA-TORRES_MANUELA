@@ -1,7 +1,16 @@
 package com.backend.clinica.entity;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name= "ODONTOLOGOS")
 public class Odontologo {
+
+    @Id
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
+
+    @Column(length=10, nullable = false)
     private String matricula;
     private String nombre;
     private String apellido;
@@ -14,10 +23,8 @@ public class Odontologo {
         this.apellido = apellido;
     }
 
-    public Odontologo(String matricula, String nombre, String apellido) {
-        this.matricula = matricula;
-        this.nombre = nombre;
-        this.apellido = apellido;
+    public Odontologo() {
+
     }
 
     public Long getId() {
