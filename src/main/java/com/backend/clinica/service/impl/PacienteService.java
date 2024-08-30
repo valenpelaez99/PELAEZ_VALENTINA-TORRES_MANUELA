@@ -45,7 +45,15 @@ public class PacienteService implements IPacienteService {
 
     @Override//NO HAY QUE LANZAR LA EXCEPCION ACA
     public PacienteSalidaDto buscarPacientePorId(Long id) {
-        return null;
+        Paciente pacienteBuscado = pacienteRepository.findById(id).orElse(null);
+        LOGGER.info("Paciente buscado: {}", JsonPrinter.toString(pacienteBuscado));
+        PacienteSalidaDto pacienteEncontrado = null;
+        if(pacienteBuscado != null){
+            pacienteEncontrado = modelMapper.map(pacienteBuscado, PacienteSalidaDto.class);
+            LOGGER.info("Paciente encontrado: {}", JsonPrinter.toString(pacienteEncontrado));
+        } else LOGGER.error("No se ha encontrado el paciente con id {}", id);
+
+        return pacienteEncontrado;
     }
 
     @Override

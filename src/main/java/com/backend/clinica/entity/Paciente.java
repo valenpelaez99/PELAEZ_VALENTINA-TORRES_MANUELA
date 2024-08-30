@@ -21,9 +21,12 @@ public class Paciente {
     private int dni;
     private LocalDate fechaIngreso;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "domicilio_id")
     private Domicilio domicilio;
 
-    public Paciente(String nombre, String apellido, int dni, LocalDate fechaIngreso, Domicilio domicilio) {
+    public Paciente(Long id,String nombre, String apellido, int dni, LocalDate fechaIngreso, Domicilio domicilio) {
+        this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
@@ -31,13 +34,8 @@ public class Paciente {
         this.domicilio = domicilio;
     }
 
-    public Paciente(Long id) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.dni = dni;
-        this.fechaIngreso = fechaIngreso;
-        this.domicilio = domicilio;
+    public Paciente() {
+
     }
 
     public Long getId() {
