@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -74,14 +75,31 @@ public class PacienteService implements IPacienteService {
             pacienteRepository.deleteById(id);
             LOGGER.warn("Se ha eliminado el paciente con id {}", id);
         } else {
-            //excepcion resource not found
+            throw new EntityNotFoundException("Paciente no encontrado con id " + id);//excepcion resource not found
         }
 
     }
 
     @Override
     public PacienteSalidaDto actualizarPaciente(PacienteEntradaDto pacienteEntradaDto, Long id) {
-        return null;
+        Paciente pacienteAActualizar = pacienteRepository.findById(id).orElse(null);
+        Paciente pacienteRecibido = modelMapper.map(pacienteEntradaDto, Paciente.class);
+        PacienteSalidaDto pacienteSalidaDto = null;
+
+        if (pacienteAActualizar != null){
+
+            pacienteRecibido.setId(pacienteAActualizar.getId());
+            pacienteRecibido.getDomicilio().setId(pacienteAActualizar.getDomicilio().getId());
+            pacienteAActualizar = pacienteRecibido;
+
+            pacienteRepository.save(pacienteAActualizar);
+            pacienteSalidaDto = modelMapper.map(pacienteAActualizar, PacienteSalidaDto.class);
+            LOGGER.warn("Paciente actualizado: {}", JsonPrinter.toString(pacienteSalidaDto));
+
+        } else LOGGER.error("No fue posible actualizar el paciente porque no se encuentra en nuestra base de datos");
+        //lanzar exception
+
+        return pacienteSalidaDto;
     }
 
 

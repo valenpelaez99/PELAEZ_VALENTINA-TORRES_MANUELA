@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -107,7 +108,39 @@ public class TurnoService implements ITurnoService {
 
     @Override
     public TurnoSalidaDto actualizarTurno(TurnoEntradaDto turnoEntradaDto, Long id) {
-        return null;
+        Turno turnoAActualizar = turnoRepository.findById(id).orElse(null);
+        TurnoSalidaDto turnoSalidaDto = null;
+
+        if (turnoAActualizar != null) {
+            // Verificar y obtener Paciente
+            Paciente paciente = modelMapper.map(turnoEntradaDto.getPacienteEntradaDto(), Paciente.class);
+            if (paciente.getId() == null || !pacienteRepository.existsById(paciente.getId())) {
+                paciente = pacienteRepository.save(paciente);
+            }
+
+            // Verificar y obtener Odontologo
+            Odontologo odontologo = modelMapper.map(turnoEntradaDto.getOdontologoEntradaDto(), Odontologo.class);
+            if (odontologo.getId() == null || !odontologoRepository.existsById(odontologo.getId())) {
+                odontologo = odontologoRepository.save(odontologo);
+            }
+
+            // Actualizar los campos del turno
+            turnoAActualizar.setPaciente(paciente);
+            turnoAActualizar.setOdontologo(odontologo);
+            turnoAActualizar.setFechaTurno(turnoEntradaDto.getFechaTurno());
+
+            // Guardar el turno actualizado
+            Turno turnoActualizado = turnoRepository.save(turnoAActualizar);
+
+            // Mapear a DTO de salida
+            turnoSalidaDto = modelMapper.map(turnoActualizado, TurnoSalidaDto.class);
+            LOGGER.warn("Turno actualizado: {}", JsonPrinter.toString(turnoSalidaDto));
+        } else {
+            LOGGER.error("No fue posible actualizar el turno porque no se encuentra en nuestra base de datos");
+            // lanzar exception
+        }
+
+        return turnoSalidaDto;
     }
 
     private void configureMapping(){
