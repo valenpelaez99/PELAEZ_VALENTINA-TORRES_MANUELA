@@ -81,7 +81,26 @@ public class PacienteService implements IPacienteService {
 
     @Override
     public PacienteSalidaDto actualizarPaciente(PacienteEntradaDto pacienteEntradaDto, Long id) {
-        return null;
+        Paciente pacienteAActualizar = pacienteRepository.findById(id).orElse(null);
+        Paciente pacienteRecibido = modelMapper.map(pacienteEntradaDto, Paciente.class);
+        PacienteSalidaDto pacienteSalidaDto = null;
+
+        if (pacienteAActualizar != null){
+
+            pacienteRecibido.setId(pacienteAActualizar.getId());
+            pacienteRecibido.getDomicilio().setId(pacienteAActualizar.getDomicilio().getId());
+            pacienteAActualizar = pacienteRecibido;
+
+            pacienteRepository.save(pacienteAActualizar);
+            pacienteSalidaDto = modelMapper.map(pacienteAActualizar, PacienteSalidaDto.class);
+            LOGGER.warn("Paciente actualizado: {}", JsonPrinter.toString(pacienteSalidaDto));
+
+        } else LOGGER.error("No fue posible actualizar el paciente porque no se encuentra en nuestra base de datos");
+        //lanzar exception
+
+        return pacienteSalidaDto;
+
+
     }
 
 

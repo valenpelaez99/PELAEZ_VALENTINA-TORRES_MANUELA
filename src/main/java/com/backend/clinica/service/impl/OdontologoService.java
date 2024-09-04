@@ -64,8 +64,26 @@ public class OdontologoService implements IOdontologoService {
     }
 
     @Override
-    public OdontologoSalidaDto actualizarOdontologo(OdontologoEntradaDto odontologo, Long id) {
-        return null;
+    public OdontologoSalidaDto actualizarOdontologo(OdontologoEntradaDto odontologoEntradaDto, Long id) {
+        Odontologo odontologoAActualizar = odontologoRepository.findById(id).orElse(null);
+        Odontologo odontologoRecibido = modelMapper.map(odontologoEntradaDto, Odontologo.class);
+        OdontologoSalidaDto odontologoSalidaDto = null;
+
+        if (odontologoAActualizar != null){
+
+            odontologoRecibido.setId(odontologoAActualizar.getId());
+            odontologoAActualizar = odontologoRecibido;
+
+            odontologoRepository.save(odontologoAActualizar);
+            odontologoSalidaDto = modelMapper.map(odontologoAActualizar, OdontologoSalidaDto.class);
+            LOGGER.warn("Odontólogo actualizado: {}", JsonPrinter.toString(odontologoSalidaDto));
+
+        } else {
+            LOGGER.error("No fue posible actualizar el odontólogo porque no se encuentra en nuestra base de datos");
+            // lanzar exception
+        }
+
+        return odontologoSalidaDto;
     }
 
     @Override
