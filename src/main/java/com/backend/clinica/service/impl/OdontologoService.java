@@ -2,9 +2,7 @@ package com.backend.clinica.service.impl;
 
 import com.backend.clinica.dto.entrada.OdontologoEntradaDto;
 import com.backend.clinica.dto.salida.OdontologoSalidaDto;
-import com.backend.clinica.dto.salida.PacienteSalidaDto;
 import com.backend.clinica.entity.Odontologo;
-import com.backend.clinica.entity.Paciente;
 import com.backend.clinica.repository.OdontologoRepository;
 import com.backend.clinica.service.IOdontologoService;
 import com.backend.clinica.utils.JsonPrinter;
@@ -13,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 @Service
 public class OdontologoService implements IOdontologoService {
@@ -75,15 +72,16 @@ public class OdontologoService implements IOdontologoService {
         if (odontologoAActualizar != null){
 
             odontologoRecibido.setId(odontologoAActualizar.getId());
-
             odontologoAActualizar = odontologoRecibido;
 
             odontologoRepository.save(odontologoAActualizar);
             odontologoSalidaDto = modelMapper.map(odontologoAActualizar, OdontologoSalidaDto.class);
-            LOGGER.warn("Odontologo actualizado: {}", JsonPrinter.toString(odontologoSalidaDto));
+            LOGGER.warn("Odontólogo actualizado: {}", JsonPrinter.toString(odontologoSalidaDto));
 
-        } else LOGGER.error("No fue posible actualizar el odontologo porque no se encuentra en nuestra base de datos");
-        //lanzar exception
+        } else {
+            LOGGER.error("No fue posible actualizar el odontólogo porque no se encuentra en nuestra base de datos");
+            // lanzar exception
+        }
 
         return odontologoSalidaDto;
     }
@@ -94,7 +92,7 @@ public class OdontologoService implements IOdontologoService {
             odontologoRepository.deleteById(id);
             LOGGER.warn("Se ha eliminado el odontologo con id {}", id);
         } else {
-            throw new EntityNotFoundException("Odontologo no encontrado con id " + id);
+            //excepcion resource not found
         }
 
     }

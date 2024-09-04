@@ -15,8 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TurnoService implements ITurnoService {
@@ -38,17 +38,19 @@ public class TurnoService implements ITurnoService {
     @Override
     public TurnoSalidaDto registrarTurno(TurnoEntradaDto turno) {
 
-        // Verificar y persistir Paciente
-        Paciente paciente = modelMapper.map(turno.getPacienteEntradaDto(), Paciente.class);
-        if (paciente.getId() == null || !pacienteRepository.existsById(paciente.getId())) {
-            paciente = pacienteRepository.save(paciente);
+        // Buscar Paciente por DNI
+        Optional<Paciente> pacienteOpt = pacienteRepository.findByDni(turno.getPacienteEntradaDto().getDni());
+        if (pacienteOpt.isEmpty()) {
+            throw new RuntimeException("El paciente con DNI " + turno.getPacienteEntradaDto().getDni() + " no existe.");
         }
+        Paciente paciente = pacienteOpt.get();
 
-        // Verificar y persistir Odontologo
-        Odontologo odontologo = modelMapper.map(turno.getOdontologoEntradaDto(), Odontologo.class);
-        if (odontologo.getId() == null || !odontologoRepository.existsById(odontologo.getId())) {
-            odontologo = odontologoRepository.save(odontologo);
+        // Buscar Odontologo por matricula
+        Optional<Odontologo> odontologoOpt = odontologoRepository.findByMatricula(turno.getOdontologoEntradaDto().getMatricula());
+        if (odontologoOpt.isEmpty()) {
+            throw new RuntimeException("El odontologo con matrícula " + turno.getOdontologoEntradaDto().getMatricula() + " no existe.");
         }
+        Odontologo odontologo = odontologoOpt.get();
 
         // Crear y persistir Turno
         Turno entidadTurno = modelMapper.map(turno, Turno.class);
@@ -56,8 +58,6 @@ public class TurnoService implements ITurnoService {
         entidadTurno.setOdontologo(odontologo);
 
         LOGGER.info("TurnoEntradaDto: {}", JsonPrinter.toString(turno));
-        //Turno entidadTurno = modelMapper.map(turno, Turno.class);
-
         LOGGER.info("EntidadTurno: {}", JsonPrinter.toString(entidadTurno));
         Turno turnoRegistrado = turnoRepository.save(entidadTurno);
 
@@ -65,6 +65,35 @@ public class TurnoService implements ITurnoService {
         TurnoSalidaDto turnoSalidaDto = modelMapper.map(turnoRegistrado, TurnoSalidaDto.class);
 
         LOGGER.info("TurnoSalidaDto: {}", JsonPrinter.toString(turnoSalidaDto));
+
+        return turnoSalidaDto;
+    }
+
+    @Override
+    public TurnoSalidaDto actualizarTurno(TurnoEntradaDto turnoEntradaDto, Long id) {
+        Turno turnoAActualizar = turnoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Turno no encontrado con ID: " + id));
+
+        // Buscar Paciente por DNI
+        Paciente paciente = pacienteRepository.findByDni(turnoEntradaDto.getPacienteEntradaDto().getDni())
+                .orElseThrow(() -> new IllegalArgumentException("Paciente no encontrado con DNI: "
+                        + turnoEntradaDto.getPacienteEntradaDto().getDni()));
+
+        // Buscar Odontologo por Matrícula
+        Odontologo odontologo = odontologoRepository.findByMatricula(turnoEntradaDto.getOdontologoEntradaDto().getMatricula())
+                .orElseThrow(() -> new IllegalArgumentException("Odontólogo no encontrado con Matrícula: "
+                        + turnoEntradaDto.getOdontologoEntradaDto().getMatricula()));
+
+        // Actualizar Turno
+        Turno turnoRecibido = modelMapper.map(turnoEntradaDto, Turno.class);
+        turnoRecibido.setId(turnoAActualizar.getId());
+        turnoRecibido.setPaciente(paciente);
+        turnoRecibido.setOdontologo(odontologo);
+
+        Turno turnoActualizado = turnoRepository.save(turnoRecibido);
+        TurnoSalidaDto turnoSalidaDto = modelMapper.map(turnoActualizado, TurnoSalidaDto.class);
+
+        LOGGER.warn("Turno actualizado: {}", JsonPrinter.toString(turnoSalidaDto));
 
         return turnoSalidaDto;
 
@@ -106,42 +135,7 @@ public class TurnoService implements ITurnoService {
 
     }
 
-    @Override
-    public TurnoSalidaDto actualizarTurno(TurnoEntradaDto turnoEntradaDto, Long id) {
-        Turno turnoAActualizar = turnoRepository.findById(id).orElse(null);
-        TurnoSalidaDto turnoSalidaDto = null;
 
-        if (turnoAActualizar != null) {
-            // Verificar y obtener Paciente
-            Paciente paciente = modelMapper.map(turnoEntradaDto.getPacienteEntradaDto(), Paciente.class);
-            if (paciente.getId() == null || !pacienteRepository.existsById(paciente.getId())) {
-                paciente = pacienteRepository.save(paciente);
-            }
-
-            // Verificar y obtener Odontologo
-            Odontologo odontologo = modelMapper.map(turnoEntradaDto.getOdontologoEntradaDto(), Odontologo.class);
-            if (odontologo.getId() == null || !odontologoRepository.existsById(odontologo.getId())) {
-                odontologo = odontologoRepository.save(odontologo);
-            }
-
-            // Actualizar los campos del turno
-            turnoAActualizar.setPaciente(paciente);
-            turnoAActualizar.setOdontologo(odontologo);
-            turnoAActualizar.setFechaTurno(turnoEntradaDto.getFechaTurno());
-
-            // Guardar el turno actualizado
-            Turno turnoActualizado = turnoRepository.save(turnoAActualizar);
-
-            // Mapear a DTO de salida
-            turnoSalidaDto = modelMapper.map(turnoActualizado, TurnoSalidaDto.class);
-            LOGGER.warn("Turno actualizado: {}", JsonPrinter.toString(turnoSalidaDto));
-        } else {
-            LOGGER.error("No fue posible actualizar el turno porque no se encuentra en nuestra base de datos");
-            // lanzar exception
-        }
-
-        return turnoSalidaDto;
-    }
 
     private void configureMapping(){
         modelMapper.typeMap(TurnoEntradaDto.class, Turno.class)

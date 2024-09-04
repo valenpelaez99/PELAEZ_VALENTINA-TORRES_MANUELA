@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -75,7 +74,7 @@ public class PacienteService implements IPacienteService {
             pacienteRepository.deleteById(id);
             LOGGER.warn("Se ha eliminado el paciente con id {}", id);
         } else {
-            throw new EntityNotFoundException("Paciente no encontrado con id " + id);//excepcion resource not found
+            //excepcion resource not found
         }
 
     }
@@ -100,6 +99,8 @@ public class PacienteService implements IPacienteService {
         //lanzar exception
 
         return pacienteSalidaDto;
+
+
     }
 
 
