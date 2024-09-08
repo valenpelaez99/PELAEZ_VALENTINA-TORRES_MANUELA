@@ -3,6 +3,7 @@ package com.backend.clinica.service.impl;
 import com.backend.clinica.dto.entrada.PacienteEntradaDto;
 import com.backend.clinica.dto.salida.PacienteSalidaDto;
 import com.backend.clinica.entity.Paciente;
+import com.backend.clinica.exceptions.ResourceNotFoundException;
 import com.backend.clinica.repository.PacienteRepository;
 import com.backend.clinica.service.IPacienteService;
 import com.backend.clinica.utils.JsonPrinter;
@@ -11,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 import java.util.List;
 
@@ -68,20 +71,39 @@ public class PacienteService implements IPacienteService {
     }
 
 
-    public void eliminarPaciente(Long id) {
+    public void eliminarPaciente(Long id) throws ResourceNotFoundException {
         if(buscarPacientePorId(id) != null){
             //llamada a la capa repositorio para eliminar
             pacienteRepository.deleteById(id);
             LOGGER.warn("Se ha eliminado el paciente con id {}", id);
         } else {
-            //excepcion resource not found
+            throw new ResourceNotFoundException("No existe el paciente con id "+id);
         }
 
     }
 
     @Override
     public PacienteSalidaDto actualizarPaciente(PacienteEntradaDto pacienteEntradaDto, Long id) {
-        return null;
+        Paciente pacienteAActualizar = pacienteRepository.findById(id).orElse(null);
+        Paciente pacienteRecibido = modelMapper.map(pacienteEntradaDto, Paciente.class);
+        PacienteSalidaDto pacienteSalidaDto = null;
+
+        if (pacienteAActualizar != null){
+
+            pacienteRecibido.setId(pacienteAActualizar.getId());
+            pacienteRecibido.getDomicilio().setId(pacienteAActualizar.getDomicilio().getId());
+            pacienteAActualizar = pacienteRecibido;
+
+            pacienteRepository.save(pacienteAActualizar);
+            pacienteSalidaDto = modelMapper.map(pacienteAActualizar, PacienteSalidaDto.class);
+            LOGGER.warn("Paciente actualizado: {}", JsonPrinter.toString(pacienteSalidaDto));
+
+        } else LOGGER.error("No fue posible actualizar el paciente porque no se encuentra en nuestra base de datos");
+        //lanzar exception
+
+        return pacienteSalidaDto;
+
+
     }
 
 
@@ -91,5 +113,10 @@ public class PacienteService implements IPacienteService {
         modelMapper.typeMap(Paciente.class, PacienteSalidaDto.class)
                 .addMappings(mapper -> mapper.map(Paciente::getDomicilio, PacienteSalidaDto::setDomicilioSalidaDto));
     }
+
+    public Optional<Paciente> findByDni(int dni) {
+        return pacienteRepository.findByDni(dni);
+    }
+
 }
 
