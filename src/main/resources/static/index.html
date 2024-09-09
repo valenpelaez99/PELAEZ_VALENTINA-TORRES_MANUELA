@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Odontólogo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Registrar Odontólogo</h1>
+        <form id="odontologoForm">
+            <div class="input-group">
+                <label for="matricula">Matrícula</label>
+                <input type="text" id="matricula" required>
+            </div>
+            <div class="input-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" required>
+            </div>
+            <div class="input-group">
+                <label for="apellido">Apellido</label>
+                <input type="text" id="apellido" required>
+            </div>
+            <button type="submit" class="btn">Registrar</button>
+        </form>
+        <div id="responseMessage"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
