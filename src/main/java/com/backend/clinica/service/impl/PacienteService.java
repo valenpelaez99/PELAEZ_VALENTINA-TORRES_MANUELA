@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import java.util.List;
 
 @Service
@@ -81,7 +83,7 @@ public class PacienteService implements IPacienteService {
     }
 
     @Override
-    public PacienteSalidaDto actualizarPaciente(PacienteEntradaDto pacienteEntradaDto, Long id) {
+    public PacienteSalidaDto actualizarPaciente(PacienteEntradaDto pacienteEntradaDto, Long id) throws ResourceNotFoundException {
         Paciente pacienteAActualizar = pacienteRepository.findById(id).orElse(null);
         Paciente pacienteRecibido = modelMapper.map(pacienteEntradaDto, Paciente.class);
         PacienteSalidaDto pacienteSalidaDto = null;
@@ -96,8 +98,10 @@ public class PacienteService implements IPacienteService {
             pacienteSalidaDto = modelMapper.map(pacienteAActualizar, PacienteSalidaDto.class);
             LOGGER.warn("Paciente actualizado: {}", JsonPrinter.toString(pacienteSalidaDto));
 
-        } else LOGGER.error("No fue posible actualizar el paciente porque no se encuentra en nuestra base de datos");
-        //lanzar exception
+        } else {
+            LOGGER.error("No fue posible actualizar el paciente porque no se encuentra en nuestra base de datos");
+            throw new ResourceNotFoundException("No fue posible actualizar el paciente porque no se encuentra en nuestra base de datos");
+        }
 
         return pacienteSalidaDto;
 
@@ -111,5 +115,10 @@ public class PacienteService implements IPacienteService {
         modelMapper.typeMap(Paciente.class, PacienteSalidaDto.class)
                 .addMappings(mapper -> mapper.map(Paciente::getDomicilio, PacienteSalidaDto::setDomicilioSalidaDto));
     }
+
+    public Optional<Paciente> findByDni(int dni) {
+        return pacienteRepository.findByDni(dni);
+    }
+
 }
 

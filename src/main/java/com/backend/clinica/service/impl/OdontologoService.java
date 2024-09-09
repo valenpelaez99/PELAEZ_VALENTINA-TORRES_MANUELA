@@ -3,6 +3,7 @@ package com.backend.clinica.service.impl;
 import com.backend.clinica.dto.entrada.OdontologoEntradaDto;
 import com.backend.clinica.dto.salida.OdontologoSalidaDto;
 import com.backend.clinica.entity.Odontologo;
+import com.backend.clinica.exceptions.ResourceNotFoundException;
 import com.backend.clinica.repository.OdontologoRepository;
 import com.backend.clinica.service.IOdontologoService;
 import com.backend.clinica.utils.JsonPrinter;
@@ -10,6 +11,10 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+
 
 import java.util.List;
 @Service
@@ -87,14 +92,18 @@ public class OdontologoService implements IOdontologoService {
     }
 
     @Override
-    public void eliminarOdontologo(Long id) {
+    public void eliminarOdontologo(Long id) throws ResourceNotFoundException {
         if(buscarOdontologoPorId(id) != null){
             odontologoRepository.deleteById(id);
             LOGGER.warn("Se ha eliminado el odontologo con id {}", id);
         } else {
-            //excepcion resource not found
+            throw new ResourceNotFoundException("No existe el odontologo con id "+id);
         }
 
+    }
+
+    public Optional<Odontologo> findByMatricula(String matricula) {
+        return odontologoRepository.findByMatricula(matricula);
     }
 
 

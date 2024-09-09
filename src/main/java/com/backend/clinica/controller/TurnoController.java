@@ -4,6 +4,8 @@ import com.backend.clinica.dto.entrada.PacienteEntradaDto;
 import com.backend.clinica.dto.entrada.TurnoEntradaDto;
 import com.backend.clinica.dto.salida.PacienteSalidaDto;
 import com.backend.clinica.dto.salida.TurnoSalidaDto;
+import com.backend.clinica.exceptions.BadRequestException;
+import com.backend.clinica.exceptions.ResourceNotFoundException;
 import com.backend.clinica.service.IPacienteService;
 import com.backend.clinica.service.ITurnoService;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("turnos")
+@CrossOrigin
 
 
 public class TurnoController {
@@ -30,9 +33,16 @@ public class TurnoController {
 
         //POST
         @PostMapping("/registrar")
-        public ResponseEntity<TurnoSalidaDto> registrarTurno(@RequestBody @Valid TurnoEntradaDto turnoEntradaDto){
-            TurnoSalidaDto turnoSalidaDto = turnoService.registrarTurno(turnoEntradaDto);
-            return new ResponseEntity<>(turnoSalidaDto, HttpStatus.CREATED);
+        public ResponseEntity<?> registrarTurno(@RequestBody @Valid TurnoEntradaDto turnoEntradaDto){
+
+            try{
+                TurnoSalidaDto turnoSalidaDto = turnoService.registrarTurno(turnoEntradaDto);
+                return new ResponseEntity<>(turnoSalidaDto, HttpStatus.CREATED);
+            }catch (BadRequestException e) {
+                // Retornar un mensaje con el error y status 400 BAD_REQUEST si ocurre BadRequestException
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            }
+
         }
 
         //GET
@@ -54,7 +64,7 @@ public class TurnoController {
 
         //DELETE
         @DeleteMapping("/eliminar")
-        public ResponseEntity<String> eliminarTruno(@RequestParam Long id){
+        public ResponseEntity<String> eliminarTruno(@RequestParam Long id) throws ResourceNotFoundException {
             turnoService.eliminarTurno(id);
             return new ResponseEntity<>("Turno eliminado correctamente", HttpStatus.NO_CONTENT);
         }
