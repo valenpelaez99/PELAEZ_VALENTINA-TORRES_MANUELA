@@ -1,0 +1,356 @@
+{
+	"info": {
+		"_postman_id": "14ac210e-02c8-4ee1-b99a-b0fd09b1c226",
+		"name": "DH",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24858364"
+	},
+	"item": [
+		{
+			"name": "ClinicaOdontologicaBack",
+			"item": [
+				{
+					"name": "PacienteRegistrar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"Manuela\",\r\n    \"apellido\":\"Torres\",\r\n    \"dni\": 123456789,\r\n    \"fechaIngreso\":\"2024-09-30\",\r\n    \"domicilioEntradaDto\":{\r\n        \"calle\":\"Vegas\",\r\n        \"numero\":7,\r\n        \"localidad\":\"Patio Bonito\",\r\n        \"provincia\":\"Medellin\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/pacientes/registrar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pacientes",
+								"registrar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PacienteIDBuscar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/pacientes/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pacientes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PacienteListar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/pacientes/listar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pacientes",
+								"listar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PacienteActualizar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"nombre\": \"Manu\",\r\n    \"apellido\": \"Torres\",\r\n    \"dni\": 123456789,\r\n    \"fechaIngreso\": \"2024-10-30\",\r\n    \"domicilioEntradaDto\": {\r\n        \"id\": 1,\r\n        \"calle\": \"Vegas\",\r\n        \"numero\": 7,\r\n        \"localidad\": \"Patio Bonito\",\r\n        \"provincia\": \"Medellin\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/pacientes/actualizar/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pacientes",
+								"actualizar",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PacienteEliminar",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/pacientes/eliminar?id=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pacientes",
+								"eliminar"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OdontologoRegistrar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"matricula\": \"1234567\",\r\n    \"nombre\": \"Valentina\",\r\n    \"apellido\": \"Pelaez\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/odontologos/registrar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"odontologos",
+								"registrar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OdontologoActualizar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"matricula\": \"1234567\",\r\n    \"nombre\": \"Valen\",\r\n    \"apellido\": \"Pelaez\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/odontologos/actualizar/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"odontologos",
+								"actualizar",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EliminarOdontologo",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/odontologos/eliminar?id=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"odontologos",
+								"eliminar"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OdontologoBuscarTodos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/odontologos/listar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"odontologos",
+								"listar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TurnoRegistrar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pacienteEntradaDto\": {\r\n        \"nombre\": \"Manuela\",\r\n        \"apellido\": \"Torres\",\r\n        \"dni\": 123456789,\r\n        \"fechaIngreso\": \"2024-09-30\",\r\n        \"domicilioEntradaDto\": {\r\n            \"calle\": \"Vegas\",\r\n            \"numero\": 7,\r\n            \"localidad\": \"Patio Bonito\",\r\n            \"provincia\": \"Medellin\"\r\n        }\r\n    },\r\n    \"odontologoEntradaDto\": {\r\n    \"matricula\":\"1234567\",\r\n    \"nombre\":\"Valentina\",\r\n    \"apellido\": \"Pelaez\"\r\n},\r\n    \"fechaTurno\": \"2024-10-30T10:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/turnos/registrar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"turnos",
+								"registrar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TurnoActualizar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pacienteEntradaDto\": {\r\n        \"nombre\": \"M\",\r\n        \"apellido\": \"Torres\",\r\n        \"dni\": 123456789,\r\n        \"fechaIngreso\": \"2024-09-30\",\r\n        \"domicilioEntradaDto\": {\r\n            \"calle\": \"Vegas\",\r\n            \"numero\": 7,\r\n            \"localidad\": \"Patio Bonito\",\r\n            \"provincia\": \"Medellin\"\r\n        }\r\n    },\r\n    \"odontologoEntradaDto\": {\r\n    \"matricula\": \"1234567\",\r\n    \"nombre\": \"Valentina\",\r\n    \"apellido\": \"Pelaez\"\r\n},\r\n    \"fechaTurno\": \"2025-09-01T10:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/turnos/actualizar/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"turnos",
+								"actualizar",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BuscarTurnoID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/turnos/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"turnos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EliminarTurnoID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/turnos/eliminar?id=1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"turnos",
+								"eliminar"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TurnoListar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/turnos/listar",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"turnos",
+								"listar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
