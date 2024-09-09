@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("pacientes")
+@CrossOrigin
 public class PacienteController {
 
     private IPacienteService pacienteService;
@@ -47,7 +48,7 @@ public class PacienteController {
 
     //PUT
     @PutMapping("/actualizar/{id}")
-    public ResponseEntity<PacienteSalidaDto> actualizarPaciente(@RequestBody @Valid PacienteEntradaDto paciente, @PathVariable Long id){
+    public ResponseEntity<PacienteSalidaDto> actualizarPaciente(@RequestBody @Valid PacienteEntradaDto paciente, @PathVariable Long id) throws ResourceNotFoundException{
         return new ResponseEntity<>(pacienteService.actualizarPaciente(paciente, id), HttpStatus.OK);
     }
 
